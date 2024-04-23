@@ -52,7 +52,7 @@ Now, let's fix the plot with ggplot.
 -   Element_text(face = "bold") helped me to get my title be bold.
 
 ```{r}
-ggplot(table, aes(x = factor(Year), y = Value))+
+p <- ggplot(table, aes(x = factor(Year), y = Value))+
   geom_bar(fill = "darkgreen", stat = "identity", width = 0.8)+
   scale_y_continuous(sec.axis = sec_axis(~., breaks = seq(0,6, by = 1)), 
                      breaks = seq(0,6, by = 1))+
@@ -63,4 +63,7 @@ ggplot(table, aes(x = factor(Year), y = Value))+
   theme(plot.title = element_text(
     face = "bold"
   ))
+
+
+p
 ```
