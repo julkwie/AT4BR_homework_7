@@ -1,0 +1,66 @@
+---
+title: "AT4BR_Exercise_7_Julia_Kwiecinska_2304"
+format: html
+editor: visual
+---
+
+## Bad plot
+
+In the last homework I used the plot from TVP "health care expenditure as % of GDP" from June 7, 2021
+
+![plotpng](pictures/plot1.png)
+
+Publication of this plot strangely enough was shown during the protest of nurses. The purpose of this chart was simple -- to present heath care spending in a favourable light after 2015 (when the right-wing populist Law and Justice (PiS) party won the Polish parliamentary election). There are 4 manipulations in one picture:
+
+-   The Y axis was scaled from 4% to emphasize the contrast. Thanks to this, visually 6% is twice as large as 5%, and the same case goes to 5% being two times bigger than 4.5%.
+
+-   The bars on the right side (6% and 7%) are crucial for the reception of the chart and are only the growth planned for 2023 and 2027, so forecasts!
+
+-   The years 2017, 2018 and 2019 have been removed from the chart, when the growth was not so spectacular.
+
+-   Different colours of the 2009-2015 and 2016-2027 bars emphasize the false contrast between parties.
+
+## Loading the data
+
+We do not have to simulate the data because it is real and available, and you can access it, for example, here: https://stat.gov.pl/. So we just need to form a table with years and values.
+
+```{r}
+table <- data.frame(
+  Year = c(2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+  Value = c(4.8, 4.7, 4.5, 4.4, 4.5, 4.4, 4.5, 4.5, 4.6, 4.5, 4.9, 5.0, 5.3)
+)
+
+table
+```
+
+## Fix the plot
+
+First, let's load the library:
+
+```{r}
+library(ggplot2)
+```
+
+Now, let's fix the plot with ggplot.
+
+-   Factor(Year) helped me with assigning each Year to each bar.
+
+-   With scale_y_continuous I added second axis on the left and changed the default breaks between the values on y axis - it was 0, 2, 4, 6... and after the change - 0, 1, 2, 3, 4...
+
+-   Label = paste0(value, "%") allowed me to label each bar above it with vjust = -0.5.
+
+-   Element_text(face = "bold") helped me to get my title be bold.
+
+```{r}
+ggplot(table, aes(x = factor(Year), y = Value))+
+  geom_bar(fill = "darkgreen", stat = "identity", width = 0.8)+
+  scale_y_continuous(sec.axis = sec_axis(~., breaks = seq(0,6, by = 1)), 
+                     breaks = seq(0,6, by = 1))+
+  theme_minimal() +
+  geom_text(aes(label = paste0(Value,"%")), vjust = -0.5, size = 3) +
+  labs(title = "Health care expenditure as % of GDP", 
+       subtitle = "In Poland, 2009 - 2021", x = "Year", y ="Percent of GDP") +
+  theme(plot.title = element_text(
+    face = "bold"
+  ))
+```
